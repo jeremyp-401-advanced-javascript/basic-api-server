@@ -1,0 +1,42 @@
+'use strict';
+
+// Taken from the demo that we did in class. Adapted to work with my work.
+
+// Create an Express server instance named 'app'
+const express = require('express');
+const app = express();
+
+// Localize Middleware Modules
+const logger = require('./middleware/logger');
+const notFoundHandler = require('./error-handler/404');
+const serverErrorHandler = require('./error-handler/500');
+const drinkRoutes = require('./routes/drink-routes');
+const tacoRoutes = require('./routes/taco-routes');
+
+// Attach Middleware
+app.use(express.json());
+app.use(logger);
+app.use(drinkRoutes);
+app.use(tacoRoutes);
+
+// TODO: Does it at least start? Remove once creating routes.
+app.get('/pol', proofOfLifeHandler);
+
+function proofOfLifeHandler(req, res, next){
+  res.status(200).send('Well... It at least does this...');
+}
+
+// TODO: What's missing? Probably nothing, but I should double check.
+
+app.use('*', notFoundHandler);
+app.use(serverErrorHandler);
+
+module.exports = {
+  server: app,
+  start: port => { // Takes port from index.js
+    if(!port) { throw new Error('missing port');}
+    app.listen(port, () => {
+      console.log(`listening on ${port}`);
+    });
+  },
+};
