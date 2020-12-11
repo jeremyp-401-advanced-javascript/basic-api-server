@@ -1,6 +1,6 @@
 'use strict';
 
-class Drink{
+class DrinkModel{
   constructor(){
     this.id = 0;
     this.db = [];
@@ -25,13 +25,15 @@ class Drink{
   update(id, obj) {
     let errors = {};
     if (!id) {
-      let needIdError = 'You must provide an id...';
-      return needIdError; // Fall dead, but let our user know why.
+      if(!obj.id) {
+        errors.id = 'Please use an id with PUT';
+        return errors;
+      }
     } else {
       // Do input validation. I'm sure we could use our validator function. Instead:
       if (!obj) { // They did send something, right?
-        let needDataError = 'No update to this drink specified...';
-        return needDataError; // Fall dead, but let our user know why.
+        errors.id = 'No update to this drink specified...';
+        return errors;
       } else {
         if(!obj.name) {
           errors.name = 'Please add a drink name';
@@ -39,44 +41,30 @@ class Drink{
         if(!obj.type) {
           errors.type = 'Please add a drink type';
         }
-        if(!obj.size) {
-          errors.size = 'Please add a drink size';
-        }
         if(Object.keys(errors).length > 0) {
           return errors;
         }
 
-        // Recreate our user's input with only the allowed data.
-        const updateObj = {
-          id: obj.id,
-          name: obj.name,
-          type: obj.type,
-          size: obj.size,
-        };
-
         // Find the object in the db and update it with updateObj.
-        this.db = this.db.map(record => {
-          if (record.id !== id) return;
-          updateObj.keys.forEach(key => {
-            record[key] = updateObj[key];
-          });
-          // TODO: Try to implement this
-          //let dbObj = this.db.find(record => record.id === id); // find record, assign to dbObj
-          //dbObj = {...dbObj, ...updateObj};
-          return record;
-        });
-        
-        // Return the object (trimmed to what was actually allowed) to the user.
-        return updateObj;
+        let dbObj = this.db.find(record => record.id === id); // find record, assign to dbObj
+        dbObj = {...dbObj, ...obj};
+        return dbObj;
       }
     }
   }
   delete(id) {
+    let errors = {};
     if (!id) {
-      let needIdError = 'You must provide an id...';
-      return needIdError; // Fall dead, but let our user know why.
+      errors.type = 'Please add a drink id';
+      return errors;
     } else {
-      // TODO: Find record in the db and remove it [filter() on id].
+      this.db = this.db.filter(record => {
+        if (record.id !== id) {
+          return record; // Found it, let filter know.
+        }
+      });
     }
   }
 }
+
+module.exports = DrinkModel;

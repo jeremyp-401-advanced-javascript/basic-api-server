@@ -1,7 +1,5 @@
 'use strict';
 
-// Taken from the demo that we did in class. Adapted to work with my work.
-
 // Create an Express server instance named 'app'
 const express = require('express');
 const app = express();
@@ -16,8 +14,12 @@ const tacoRoutes = require('./routes/taco-routes');
 // Attach Middleware
 app.use(express.json());
 app.use(logger);
-app.use(drinkRoutes);
 app.use(tacoRoutes);
+app.use(drinkRoutes);
+
+app.post('/test', (req, res, next) => {
+  res.status(200).send(req.body);
+});
 
 // TODO: Does it at least start? Remove once creating routes.
 app.get('/pol', proofOfLifeHandler);

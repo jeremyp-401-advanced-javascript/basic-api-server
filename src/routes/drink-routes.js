@@ -1,11 +1,12 @@
 'use strict';
 
-const express = require(express);
-const Drinks = require('../models/DrinkModel');
-const drinks = new Drinks();
+const express = require('express');
+const Drink = require('../models/DrinkModel');
+const drinks = new Drink();
 
 const router = express.Router();
 
+// Route Handlers
 router.get('/drinks', getAllDrinks);
 router.get('/drinks/:id', getDrink);
 router.post('/drinks', createDrink);
@@ -18,7 +19,7 @@ router.delete('/drinks/:id', deleteDrink);
 //     Path: /food
 //     Returns: An array of objects, each object being one entry from your database
 
-function getAllDrinks(req, res) {
+function getAllDrinks(req, res) { // ...and regret it the next morning.
   const allDrinks = drinks.get();
   res.status(200).json(allDrinks);
 }
@@ -29,7 +30,7 @@ function getAllDrinks(req, res) {
 //     Path: /food/1
 //     Returns: The object from the database, which has the id matching that which is in the path
 
-function getDrink(req, res) {
+function getDrink(req, res) { // ...like a responsible adult.
   const id = parseInt(req.params.id);
   const oneDrink = drinks.get(id);
   res.status(200).json(oneDrink);
@@ -44,10 +45,10 @@ function getDrink(req, res) {
 //         You must generate an ID and attach it to the object
 //         You should verify that only the fields you define get saved as a record
 
-function createDrink(req, res) {
-  const id = parseInt(req.params.id);
-  const oneDrink = drinks.get(id);
-  res.status(200).json(oneDrink);
+function createDrink(req, res) { // Isn't this the bartender's job? I gotta do everything around here.
+  // This should use the object from the request.body
+  const makeDrink = drinks.post(req.body);
+  res.status(200).json(makeDrink);
 }
 
 // Update A Record
@@ -58,8 +59,11 @@ function createDrink(req, res) {
 //     Returns: The object from the database, which has the id matching that which is in the path, with the updated/changed data
 //         You should verify that only the fields you define get saved as a record
 
-function updateDrink(res, req) {
-
+function updateDrink(res, req) { // Even though an Old Fashioned is fine as is.
+  const id = parseInt(req.params.id);
+  const drinkBody = req.body; // This one's full bodied, with just a taste of turpentine.
+  const updateDrink = drinks.put(id, drinkBody);
+  res.status(200).json(updateDrink); // Send 200, good to go.
 }
 
 // Delete A Record
@@ -68,8 +72,10 @@ function updateDrink(res, req) {
 //     Path: /food/1
 //     Returns: The record from the database as it exists after you delete it (i.e. null)
 
-function deleteDrink(res, req) {
-  const id = parseInt(req.params.id);
-  drinks.delete(id);
-  res.status(204).json({'message':'Drink removed!'});
+function deleteDrink(res, req) { // Orignally named barFight() since someone always gets slid across the bar...
+  const id = parseInt(req.params.id); // ...but that's more appropriate for deleteAllDrinks() but...
+  const removeDrink = drinks.delete(id); // ...that was prohibition which is now res.status(410).
+  res.status(200).json(removeDrink); // Send 200, with message (if needed);
 }
+
+module.exports = router;

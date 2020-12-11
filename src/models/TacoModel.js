@@ -1,6 +1,6 @@
 'use strict';
 
-class Taco{
+class TacoModel{
   constructor(){
     this.id = 0;
     this.db = [];
@@ -24,8 +24,10 @@ class Taco{
   update(id, obj) {
     let errors = {};
     if (!id) {
-      let needIdError = 'You must provide an id...';
-      return needIdError; // Fall dead, but let our user know why.
+      if(!obj.id) {
+        errors.id = 'Please use an id with PUT';
+        return errors;
+      }
     } else {
       // Do input validation. I'm sure we could use our validator function. Instead:
       if (!obj) { // They did send something, right?
@@ -42,22 +44,26 @@ class Taco{
           return errors;
         }
 
-        const updateObj = {
-          id: obj.id,
-          name: obj.name,
-          type: obj.type,
-        };
-        
-        // TODO: Find the object in the db and update it [find, then filter (or splice and insert)] with updateObj.
+        // Find the object in the db and update it with updateObj.
+        let dbObj = this.db.find(record => record.id === id); // find record, assign to dbObj
+        dbObj = {...dbObj, ...obj};
+        return dbObj;
       }
     }
   }
   delete(id) {
+    let errors = {};
     if (!id) {
-      let needIdError = 'You must provide an id...';
-      return needIdError; // Fall dead, but let our user know why.
+      errors.type = 'Please add a taco id';
+      return errors;
     } else {
-      // TODO: Find record in the db and remove it [filter() on id].
+      this.db = this.db.filter(record => {
+        if (record.id !== id) {
+          return record; // Found it, let filter know.
+        }
+      });
     }
   }
 }
+
+module.exports = TacoModel;
