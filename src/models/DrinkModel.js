@@ -41,6 +41,9 @@ class DrinkModel{
         if(!obj.type) {
           errors.type = 'Please add a drink type';
         }
+        if(!obj.size) {
+          errors.type = 'Please add a drink size';
+        }
         if(Object.keys(errors).length > 0) {
           return errors;
         }

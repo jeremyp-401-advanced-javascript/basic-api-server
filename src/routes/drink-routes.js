@@ -30,7 +30,7 @@ function getAllDrinks(req, res) { // ...and regret it the next morning.
 //     Path: /food/1
 //     Returns: The object from the database, which has the id matching that which is in the path
 
-function getDrink(req, res) { // ...like a responsible adult.
+function getDrink(req, res) { // ...one, like a responsible adult.
   const id = parseInt(req.params.id);
   const oneDrink = drinks.get(id);
   res.status(200).json(oneDrink);
@@ -47,6 +47,7 @@ function getDrink(req, res) { // ...like a responsible adult.
 
 function createDrink(req, res) { // Isn't this the bartender's job? I gotta do everything around here.
   // This should use the object from the request.body
+  console.log(req.body);
   const makeDrink = drinks.post(req.body);
   res.status(200).json(makeDrink);
 }
@@ -59,10 +60,10 @@ function createDrink(req, res) { // Isn't this the bartender's job? I gotta do e
 //     Returns: The object from the database, which has the id matching that which is in the path, with the updated/changed data
 //         You should verify that only the fields you define get saved as a record
 
-function updateDrink(res, req) { // Even though an Old Fashioned is fine as is.
+function updateDrink(req, res) { // Even though an Old Fashioned is fine as is.
   const id = parseInt(req.params.id);
   const drinkBody = req.body; // This one's full bodied, with just a taste of turpentine.
-  const updateDrink = drinks.put(id, drinkBody);
+  const updateDrink = drinks.update(id, drinkBody);
   res.status(200).json(updateDrink); // Send 200, good to go.
 }
 
@@ -72,7 +73,7 @@ function updateDrink(res, req) { // Even though an Old Fashioned is fine as is.
 //     Path: /food/1
 //     Returns: The record from the database as it exists after you delete it (i.e. null)
 
-function deleteDrink(res, req) { // Orignally named barFight() since someone always gets slid across the bar...
+function deleteDrink(req, res) { // Orignally named barFight() since someone always gets slid across the bar...
   const id = parseInt(req.params.id); // ...but that's more appropriate for deleteAllDrinks() but...
   const removeDrink = drinks.delete(id); // ...that was prohibition which is now res.status(410).
   res.status(200).json(removeDrink); // Send 200, with message (if needed);

@@ -1,6 +1,7 @@
 'use strict';
 
 // Create an Express server instance named 'app'
+require('dotenv').config();
 const express = require('express');
 const app = express();
 
@@ -16,19 +17,6 @@ app.use(express.json());
 app.use(logger);
 app.use(tacoRoutes);
 app.use(drinkRoutes);
-
-app.post('/test', (req, res, next) => {
-  res.status(200).send(req.body);
-});
-
-// TODO: Does it at least start? Remove once creating routes.
-app.get('/pol', proofOfLifeHandler);
-
-function proofOfLifeHandler(req, res, next){
-  res.status(200).send('Well... It at least does this...');
-}
-
-// TODO: What's missing? Probably nothing, but I should double check.
 
 app.use('*', notFoundHandler);
 app.use(serverErrorHandler);
